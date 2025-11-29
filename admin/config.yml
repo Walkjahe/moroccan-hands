@@ -1,0 +1,71 @@
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/moroccan-hands
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "General Settings"
+        name: "site_settings"
+        file: "site-settings.json"
+        fields:
+          - label: "Contact Information"
+            name: "contact"
+            widget: "object"
+            fields:
+              - { label: "Email", name: "email", widget: "string", default: "info@moroccanhands.com" }
+              - { label: "Phone", name: "phone", widget: "string", default: "+212 555 123 456" }
+              - { label: "WhatsApp", name: "whatsapp", widget: "string", default: "+212 555 123 456" }
+              - { label: "Address", name: "address", widget: "string", default: "Marrakech, Morocco" }
+          
+          - label: "Analytics & SEO"
+            name: "analytics"
+            widget: "object"
+            fields:
+              - { label: "Google Analytics ID", name: "google_analytics_id", widget: "string", hint: "Format: G-XXXXXXXXXX" }
+              - { label: "Google Search Console Code", name: "google_search_console", widget: "string", hint: "Verification code only" }
+          
+          - label: "Social Media"
+            name: "social"
+            widget: "object"
+            fields:
+              - { label: "Facebook URL", name: "facebook", widget: "string", required: false }
+              - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
+              - { label: "Twitter URL", name: "twitter", widget: "string", required: false }
+              - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+          
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            fields:
+              - { label: "Site Name", name: "site_name", widget: "string", default: "Moroccan Hands" }
+              - { label: "Tagline", name: "tagline", widget: "string", default: "Your gateway to authentic Moroccan experiences" }
+
+  - name: "blog"
+    label: "Blog Articles"
+    label_singular: "Blog Article"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", hint: "Article title" }
+      - { label: "Publish Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "Category", name: "category", widget: "select", options: ["Culture", "Travel Tips", "Food", "Nature", "History", "Shopping"], default: "Travel Tips" }
+      - { label: "Featured Image", name: "featured_image", widget: "image", required: false, hint: "Main article image (recommended size: 1920x1080)" }
+      - { label: "Excerpt", name: "excerpt", widget: "text", hint: "Short description (150-200 characters)" }
+      - { label: "Article Content", name: "body", widget: "markdown", hint: "Full article content with rich formatting" }
+      - label: "SEO Settings"
+        name: "seo"
+        widget: "object"
+        collapsed: true
+        fields:
+          - { label: "SEO Title", name: "seo_title", widget: "string", required: false, hint: "Custom title for search engines" }
+          - { label: "SEO Description", name: "seo_description", widget: "text", required: false, hint: "Meta description for search results" }
+      - { label: "Author", name: "author", widget: "string", default: "Moroccan Hands Team" }

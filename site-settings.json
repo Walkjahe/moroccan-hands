@@ -1,0 +1,22 @@
+{
+    "contact": {
+        "email": "info@moroccanhands.com",
+        "phone": "+212 555 123 456",
+        "whatsapp": "+212 555 123 456",
+        "address": "Marrakech, Morocco"
+    },
+    "analytics": {
+        "google_analytics_id": "G-XXXXXXXXXX",
+        "google_search_console": ""
+    },
+    "social": {
+        "facebook": "",
+        "instagram": "",
+        "twitter": "",
+        "youtube": ""
+    },
+    "seo": {
+        "site_name": "Moroccan Hands",
+        "tagline": "Your gateway to authentic Moroccan experiences"
+    }
+}
