@@ -70,44 +70,60 @@ git push -u origin main
 
 ---
 
-## الخطوة 5️⃣: إعداد GitHub OAuth للـ CMS
+## الخطوة 5️⃣: إعداد Cloudflare Worker للمصادقة (Authentication)
 
-لكي تستطيع الدخول إلى لوحة التحكم `/admin/`، تحتاج إنشاء GitHub OAuth App:
+بما أننا لا نستخدم Netlify، سنستخدم **Cloudflare Workers** (مجاني) لعمل "جسر" لتسجيل الدخول.
 
-1. **افتح GitHub Developer Settings:**
-   - اذهب إلى [https://github.com/settings/developers](https://github.com/settings/developers)
-   - اضغط `OAuth Apps`
-   - اضغط `New OAuth App`
+### 1. إنشاء Cloudflare Worker
+1. اذهب إلى [Cloudflare Dashboard](https://dash.cloudflare.com/) وسجل دخول (أو أنشئ حساباً).
+2. في القائمة الجانبية، اختر **Workers & Pages**.
+3. اضغط **Create Application** ثم **Create Worker**.
+4. سمّه مثلاً: `moroccan-hands-auth` واضغط **Deploy**.
 
-2. **املأ التفاصيل:**
-   - **Application name:** `Moroccan Hands CMS`
-   - **Homepage URL:** `https://YOUR_USERNAME.github.io/moroccan-hands/`
-   - **Authorization callback URL:** `https://api.netlify.com/auth/done`
-   
-   > ⚠️ **مهم:** استخدم بالضبط هذا الـ callback URL: `https://api.netlify.com/auth/done`
+### 2. إضافة كود المصادقة
+1. بعد إنشاء الـ Worker، اضغط **Edit Code**.
+2. امسح الكود الموجود هناك.
+3. انسخ الكود من ملف `oauth-worker.js` الموجود في مجلد مشروعك (على جهازك) والصقه في Cloudflare.
+4. اضغط **Save and Deploy**.
 
-3. **اضغط `Register application`**
+### 3. إعداد GitHub OAuth App
+1. اذهب إلى [GitHub Developer Settings](https://github.com/settings/developers).
+2. اضغط **New OAuth App**.
+3. املأ البيانات:
+   - **Application Name:** `Moroccan Hands CMS`
+   - **Homepage URL:** رابط موقعك (مثال: `https://YOUR_USERNAME.github.io/moroccan-hands/`)
+   - **Authorization callback URL:** رابط الـ Worker الخاص بك + `/callback`
+     - مثال: `https://moroccan-hands-auth.YOUR_SUBDOMAIN.workers.dev/callback`
+     - (يمكنك معرفة رابط الـ Worker من لوحة تحكم Cloudflare).
+4. اضغط **Register application**.
+5. انسخ **Client ID** و **Client Secret**.
 
-4. **احفظ المعلومات:**
-   - **Client ID:** انسخه واحفظه
-   - **Client Secret:** اضغط `Generate a new client secret` ثم انسخه واحفظه
+### 4. ربط المتغيرات (Environment Variables)
+1. ارجع إلى إعدادات الـ Worker في Cloudflare (Settings -> Variables).
+2. أضف متغيرين جديدين:
+   - `CLIENT_ID`: (ألصق القيمة من GitHub)
+   - `CLIENT_SECRET`: (ألصق القيمة من GitHub)
+   - **مهم:** اضغط **Encrypt** لـ Client Secret للحماية.
+3. اضغط **Save and Deploy** مرة أخرى للتأكد.
 
 ---
 
 ## الخطوة 6️⃣: تحديث ملف config.yml
 
-الآن عُد إلى المشروع وحدّث ملف ` admin/config.yml`:
+الآن، أخبر الـ CMS بعنوان الـ Worker الجديد.
+
+1. افتح ملف `admin/config.yml`.
+2. عدّل `base_url` ليصبح رابط الـ Worker الخاص بك (بدون `/callback`):
 
 ```yaml
 backend:
   name: github
-  repo: YOUR_GITHUB_USERNAME/moroccan-hands  # غيّر هذا باسم المستخدم الخاص بك
+  repo: YOUR_GITHUB_USERNAME/moroccan-hands
   branch: main
-  base_url: https://api.netlify.com  # إضافة هذين السطرين
-  auth_endpoint: auth                 # للتو ثيق عبر GitHub
+  base_url: https://moroccan-hands-auth.YOUR_SUBDOMAIN.workers.dev
+  auth_endpoint: auth
 ```
 
-**ملاحظة:** Netlify يوفر خدمة GitHub OAuth مجاناً، حتى بدون استضافة على Netlify!
 
 ---
 
@@ -153,9 +169,9 @@ git push
 ## 📞 إذا واجهت مشكلة
 
 ### المشكلة: "Authentication Error" في CMS
-- تأكد من صحة Client ID و Client Secret
-- تأكد من callback URL بالضبط: `https://api.netlify.com/auth/done`
-- تأكد من تحديث اسم Repository في `config.yml`
+- تأكد من أنك أضفت `CLIENT_ID` و `CLIENT_SECRET` في إعدادات Cloudflare Worker.
+- تأكد من أن `base_url` في `config.yml` هو رابط الـ Worker الصحيح (بدون `/` في النهاية).
+- تأكد من أن `Authorization callback URL` في GitHub يطابق رابط الـ Worker + `/callback`.
 
 ### المشكلة: الموقع لا يعمل
 - انتظر 2-3 دقائق بعد تفعيل GitHub Pages

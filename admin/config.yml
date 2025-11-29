@@ -2,8 +2,8 @@ backend:
   name: github
   repo: walkjahe/moroccan-hands
   branch: main
-  base_url: https://api.netlify.com
-  site_domain: moroccanhands.netlify.app
+  # base_url is your Cloudflare Worker URL
+  base_url: https://mh.walkjahe06.workers.dev
   auth_endpoint: auth
 
 media_folder: "assets/uploads"
