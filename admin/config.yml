@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: walkjahe/moroccan-hands
+  repo: Walkjahe/moroccan-hands
   branch: main
   # base_url is your Cloudflare Worker URL
   base_url: https://red-mud-786a.walkjahe06.workers.dev
