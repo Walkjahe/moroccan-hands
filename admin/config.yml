@@ -2,7 +2,7 @@ backend:
   name: github
   repo: walkjahe/moroccan-hands
   branch: main
-  base_url: https://api.netlify.com
+  base_url: https://moroccanhands.netlify.app
   auth_endpoint: auth
 
 media_folder: "assets/uploads"
